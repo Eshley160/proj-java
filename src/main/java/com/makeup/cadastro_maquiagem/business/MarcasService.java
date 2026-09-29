@@ -21,4 +21,22 @@ public class MarcasService {
                 () -> new RuntimeException("Nome não encontrado")
         );
     }
+
+    public void deletarMarcaPorNome(String nome){
+        repository.deleteByNome(nome);
+    }
+
+    public void atualizarMarcaPorId(Integer id, MarcasMaquiagem marca) {
+
+        MarcasMaquiagem marcaEntity = repository.findById(id).orElseThrow(() ->
+                new RuntimeException("Marca não encontrada"));
+
+        MarcasMaquiagem marcaAtualizada = MarcasMaquiagem.builder()
+                .nome(marca.getNome() != null ? marca.getNome() :
+                        marcaEntity.getNome())
+                .id(marcaEntity.getId())
+                .build();
+
+        repository.saveAndFlush(marcaAtualizada);
+    }
 }
