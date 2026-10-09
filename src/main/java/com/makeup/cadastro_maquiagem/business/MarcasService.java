@@ -32,9 +32,11 @@ public class MarcasService {
                 new RuntimeException("Marca não encontrada"));
 
         MarcasMaquiagem marcaAtualizada = MarcasMaquiagem.builder()
-                .nome(marca.getNome() != null ? marca.getNome() :
-                        marcaEntity.getNome())
                 .id(marcaEntity.getId())
+                .nome(marca.getNome() != null ? marca.getNome() : marcaEntity.getNome())
+                .ano(marca.getAno() != null ? marca.getAno() : marcaEntity.getAno())
+                .pais(marca.getPais() != null ? marca.getPais() : marcaEntity.getPais())
+                .crueltyFree(marca.getCrueltyFree() != null ? marca.getCrueltyFree() : marcaEntity.getCrueltyFree())
                 .build();
 
         repository.saveAndFlush(marcaAtualizada);
