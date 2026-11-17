@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão de Marcas de Maquiagem | Beauty Registry</title>
+  
+  <!-- Fontes do Google: Playfair Display (editorial/sofisticado) & Plus Jakarta Sans (moderno/legível) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Estilos da Aplicação -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Container de Notificações Toast -->
+  <aside id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></aside>
+
+  <!-- Cabeçalho Principal -->
+  <header class="app-header">
+    <div class="header-inner container">
+      <div class="brand-identity">
+        <div class="brand-logo-icon" aria-hidden="true">
+          <!-- Ícone elegante de brilho / cosméticos -->
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
+          </svg>
+        </div>
+        <div class="brand-titles">
+          <h1>Gestão de Marcas de Maquiagem</h1>
+          <p class="brand-subtitle">Plataforma de Catálogo & Integração REST API</p>
+        </div>
+      </div>
+
+      <!-- Indicador Visual de Status da API -->
+      <div class="api-status-widget" id="apiStatusWidget" title="Status de conexão com http://localhost:8080/marca">
+        <span class="status-indicator-dot" id="statusDot"></span>
+        <div class="status-text-wrap">
+          <span class="status-label">Backend Spring Boot</span>
+          <strong class="status-state" id="statusText">Verificando...</strong>
+        </div>
+        <button type="button" id="btnCheckApi" class="btn-icon-refresh" title="Reverificar conexão com a API" aria-label="Reverificar conexão">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-container container">
+    <div class="dashboard-grid">
+
+      <!-- ============================================== -->
+      <!-- SEÇÃO 1: CADASTRO DE NOVA MARCA               -->
+      <!-- ============================================== -->
+      <section class="card-panel panel-cadastro" aria-labelledby="tituloCadastro">
+        <div class="panel-header">
+          <div class="panel-header-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </div>
+          <div>
+            <h2 id="tituloCadastro" class="panel-title">Cadastrar Nova Marca</h2>
+            <p class="panel-description">Preencha os dados abaixo para registrar uma marca no catálogo.</p>
+          </div>
+        </div>
+
+        <form id="formCadastro" class="form-grid" novalidate>
+          <!-- Campo Nome -->
+          <div class="form-group full-width">
+            <label for="cadNome" class="form-label">
+              Nome da Marca <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <input 
+                type="text" 
+                id="cadNome" 
+                name="nome" 
+                class="form-control" 
+                placeholder="Ex: Rare Beauty, Fenty Beauty, Dior..." 
+                required
+                autocomplete="off"
+              >
+            </div>
+            <small class="field-hint">Obrigatório. Digite o nome oficial da marca.</small>
+          </div>
+
+          <!-- Campo Ano de Fundação -->
+          <div class="form-group half-width">
+            <label for="cadAno" class="form-label">Ano de Fundação</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              <input 
+                type="number" 
+                id="cadAno" 
+                name="ano" 
+                class="form-control" 
+                placeholder="Ex: 2019" 
+                min="1800" 
+                max="2099"
+              >
+            </div>
+          </div>
+
+          <!-- Campo País de Origem -->
+          <div class="form-group half-width">
+            <label for="cadPais" class="form-label">País de Origem</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+              <input 
+                type="text" 
+                id="cadPais" 
+                name="pais" 
+                class="form-control" 
+                placeholder="Ex: Estados Unidos, França, Brasil..."
+              >
+            </div>
+          </div>
+
+          <!-- Switch Cruelty-Free Estilizado -->
+          <div class="form-group full-width switch-group">
+            <div class="switch-content">
+              <span class="switch-title">
+                <span class="cruelty-bunny-icon">🐇</span>
+                Cruelty-Free (Livre de Crueldade)
+              </span>
+              <p class="switch-description">
+                A marca certifica que não realiza testes em animais durante nenhuma fase de produção.
+              </p>
+            </div>
+            <label class="toggle-switch" for="cadCrueltyFree">
+              <input type="checkbox" id="cadCrueltyFree" name="crueltyFree">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- Ações do Formulário -->
+          <div class="form-actions full-width">
+            <button type="button" id="btnLimparCadastro" class="btn btn-secondary">
+              Limpar Campos
+            </button>
+            <button type="submit" id="btnSubmitCadastro" class="btn btn-primary">
+              <span class="btn-text">Cadastrar Marca</span>
+              <svg class="btn-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- SEÇÃO 2 & 3: CONSULTA E GESTÃO DE MARCAS       -->
+      <!-- ============================================== -->
+      <section class="card-panel panel-consulta" aria-labelledby="tituloConsulta">
+        <div class="panel-header">
+          <div class="panel-header-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </div>
+          <div>
+            <h2 id="tituloConsulta" class="panel-title">Consultar Marca</h2>
+            <p class="panel-description">Busque por nome exato para visualizar, editar ou remover registros.</p>
+          </div>
+        </div>
+
+        <!-- Barra de Busca -->
+        <form id="formBusca" class="search-form" role="search" novalidate>
+          <div class="search-input-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input 
+              type="text" 
+              id="inputBuscaNome" 
+              class="search-control" 
+              placeholder="Digite o nome da marca cadastrada (ex: Rare Beauty)..."
+              required
+              autocomplete="off"
+            >
+          </div>
+          <button type="submit" id="btnBuscar" class="btn btn-primary btn-search">
+            <span class="btn-text">Buscar</span>
+            <svg class="btn-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </form>
+
+        <!-- Container do Card de Resultado -->
+        <div id="resultadoContainer" class="resultado-container">
+
+          <!-- Estado Vazio Inicial -->
+          <div id="estadoVazio" class="empty-state">
+            <div class="empty-state-art">
+              <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <h3 class="empty-state-title">Nenhuma marca consultada</h3>
+            <p class="empty-state-text">
+              Utilize o campo de busca acima informando o nome da marca para consultar detalhes, editar dados ou excluí-la.
+            </p>
+          </div>
+
+          <!-- Estado de Carregamento (Loading) -->
+          <div id="estadoCarregando" class="loading-state hidden">
+            <div class="spinner"></div>
+            <p>Consultando API Spring Boot...</p>
+          </div>
+
+          <!-- Card Detalhado da Marca (Seção 2 & 3) -->
+          <article id="cardMarca" class="brand-card hidden" aria-live="polite">
+            <!-- Header do Card -->
+            <div class="brand-card-header">
+              <div class="brand-card-title-group">
+                <span class="badge-id" id="cardMarcaId" title="ID único gerado pelo banco">ID: --</span>
+                <h3 class="brand-card-name" id="cardMarcaNome">Nome da Marca</h3>
+              </div>
+              <div id="cardMarcaBadgeCruelty" class="cruelty-badge">
+                <!-- Badge Cruelty-Free dinâmico -->
+              </div>
+            </div>
+
+            <!-- Dados da Marca -->
+            <div class="brand-card-details">
+              <div class="detail-item">
+                <div class="detail-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                </div>
+                <div class="detail-info">
+                  <span class="detail-label">Ano de Fundação</span>
+                  <strong class="detail-value" id="cardMarcaAno">--</strong>
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                  </svg>
+                </div>
+                <div class="detail-info">
+                  <span class="detail-label">País de Origem</span>
+                  <strong class="detail-value" id="cardMarcaPais">--</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Seção 3: Ações Rápidas no Card -->
+            <div class="brand-card-actions">
+              <button type="button" id="btnCardEditar" class="btn btn-outline-edit">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                <span>Editar Marca</span>
+              </button>
+
+              <button type="button" id="btnCardExcluir" class="btn btn-outline-delete">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  <line x1="10" y1="11" x2="10" y2="17"/>
+                  <line x1="14" y1="11" x2="14" y2="17"/>
+                </svg>
+                <span>Excluir Marca</span>
+              </button>
+
+              <button type="button" id="btnCardLimpar" class="btn btn-ghost" title="Fechar visualização">
+                <span>Limpar Card</span>
+              </button>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ============================================== -->
+  <!-- MODAL DE EDIÇÃO DE MARCA (PUT /marca?id={id})  -->
+  <!-- ============================================== -->
+  <div id="modalEdicao" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalEdicaoTitulo">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3 id="modalEdicaoTitulo" class="modal-title">Editar Marca</h3>
+          <p class="modal-subtitle">Atualize as informações cadastrais da marca selecionada.</p>
+        </div>
+        <button type="button" id="btnFecharModalEdicao" class="btn-modal-close" aria-label="Fechar modal">
+          &times;
+        </button>
+      </div>
+
+      <form id="formEdicao" class="modal-body form-grid" novalidate>
+        <!-- ID Oculto / Exibido Informativo -->
+        <div class="form-group full-width id-highlight-bar">
+          <span class="id-tag">ID do Registro no Banco:</span>
+          <strong id="editMarcaIdDisplay" class="id-number">#--</strong>
+          <input type="hidden" id="editMarcaId" name="id">
+        </div>
+
+        <!-- Campo Nome -->
+        <div class="form-group full-width">
+          <label for="editNome" class="form-label">
+            Nome da Marca <span class="required-mark">*</span>
+          </label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input type="text" id="editNome" name="nome" class="form-control" required autocomplete="off">
+          </div>
+        </div>
+
+        <!-- Campo Ano -->
+        <div class="form-group half-width">
+          <label for="editAno" class="form-label">Ano de Fundação</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <input type="number" id="editAno" name="ano" class="form-control" min="1800" max="2099">
+          </div>
+        </div>
+
+        <!-- Campo País -->
+        <div class="form-group half-width">
+          <label for="editPais" class="form-label">País de Origem</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            <input type="text" id="editPais" name="pais" class="form-control">
+          </div>
+        </div>
+
+        <!-- Switch Cruelty-Free -->
+        <div class="form-group full-width switch-group">
+          <div class="switch-content">
+            <span class="switch-title">
+              <span class="cruelty-bunny-icon">🐇</span>
+              Cruelty-Free (Livre de Crueldade)
+            </span>
+            <p class="switch-description">Indique se a marca possui certificação livre de crueldade.</p>
+          </div>
+          <label class="toggle-switch" for="editCrueltyFree">
+            <input type="checkbox" id="editCrueltyFree" name="crueltyFree">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Ações do Modal -->
+        <div class="modal-footer full-width">
+          <button type="button" id="btnCancelarEdicao" class="btn btn-secondary">
+            Cancelar
+          </button>
+          <button type="submit" id="btnSalvarEdicao" class="btn btn-primary">
+            <span class="btn-text">Salvar Alterações</span>
+            <svg class="btn-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO               -->
+  <!-- ============================================== -->
+  <div id="modalExclusao" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalExclusaoTitulo">
+    <div class="modal-box modal-box-alert">
+      <div class="modal-alert-icon">
+        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+
+      <div class="modal-alert-content">
+        <h3 id="modalExclusaoTitulo" class="modal-title">Confirmar Exclusão</h3>
+        <p class="modal-subtitle">
+          Tem certeza de que deseja excluir permanentemente a marca <strong id="exclusaoNomeMarca">""</strong>?
+        </p>
+        <p class="modal-warning-text">Esta ação enviará uma requisição <code>DELETE</code> ao backend e não poderá ser desfeita.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="btnCancelarExclusao" class="btn btn-secondary">
+          Cancelar
+        </button>
+        <button type="button" id="btnConfirmarExclusao" class="btn btn-danger">
+          <span class="btn-text">Sim, Excluir Marca</span>
+          <svg class="btn-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="app-footer">
+    <div class="container footer-content">
+      <p class="footer-copy">
+        Beauty Registry &copy; Gestão de Marcas & Cosméticos &bull; Integração RESTful Spring Boot
+      </p>
+      <div class="footer-meta">
+        <span class="meta-tag">Endpoint Base: <code>http://localhost:8080/marca</code></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script da Aplicação -->
+  <script src="script.js"></script>
+</body>
+</html>
